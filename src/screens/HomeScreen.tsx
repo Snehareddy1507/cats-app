@@ -5,9 +5,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     FlatList,
-    Dimensions,
     ActivityIndicator,
-    Image,
 } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -16,22 +14,18 @@ import {
     faUpload,
     faHeart,
 } from '@fortawesome/free-solid-svg-icons';
-import { RootStackParamList } from '../../navigation/AppNavigator';
+import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useGetCatsQuery } from '../services/catApi';
+import { useGetCatsQuery, useGetFavouritesQuery, useAddFavouriteMutation, useRemoveFavouriteMutation } from '../services/catApi';
+import { STRINGS } from '../constants/strings';
+import CatCard from '../components/CatCard';
+import { Cat, Favourite } from '../types/catTypes';
+
 type NavigationProps = NativeStackNavigationProp<
     RootStackParamList,
     'HomeScreen'
 >;
-
-const numColumns = 2;
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-
-const ITEM_SPACING = 12;
-
-const ITEM_SIZE = (SCREEN_WIDTH - 24 * 2 - ITEM_SPACING * (numColumns - 1)) / numColumns;
 
 export default function HomeScreen() {
 
@@ -42,6 +36,23 @@ export default function HomeScreen() {
         isLoading,
         error,
     } = useGetCatsQuery(undefined);
+
+    const { data: favourites } = useGetFavouritesQuery(undefined);
+    const [addFavourite] = useAddFavouriteMutation();
+    const [removeFavourite] = useRemoveFavouriteMutation();
+
+    const mergedData = React.useMemo(() => {
+        if (!data) return [];
+        return data.map((cat: Cat) => {
+            const fav = favourites?.find((f: Favourite) => f.image_id === cat.id);
+
+            return {
+                ...cat,
+                isFavourite: !!fav,
+                favouriteId: fav?.id || null,
+            };
+        });
+    }, [data, favourites]);
 
     const renderContent = () => {
 
@@ -57,18 +68,18 @@ export default function HomeScreen() {
             return (
                 <View style={styles.center}>
                     <Text style={styles.errorText}>
-                        Failed to load cats
+                        {STRINGS.homeScreen.errorMsg}
                     </Text>
                 </View>
             );
         }
 
-        if (data?.length > 0) {
+        if (data && data?.length > 0) {
             return (
                 <FlatList
-                    data={data}
+                    data={mergedData ?? []}
                     keyExtractor={(item) => item.id}
-                    numColumns={numColumns}
+                    numColumns={2}
                     contentContainerStyle={{
                         paddingBottom: 120,
                         paddingTop: 12,
@@ -78,12 +89,23 @@ export default function HomeScreen() {
                         marginBottom: 12,
                     }}
                     renderItem={({ item }) => (
-                        <View style={styles.gridItem}>
-                            <Image
-                                source={{ uri: item.url }}
-                                style={styles.image}
-                            />
-                        </View>
+                        <CatCard
+                            item={item}
+                            onToggleFavourite={async () => {
+                                try {
+                                    if (item.isFavourite) {
+                                        if (item.favouriteId) {
+                                            await removeFavourite(item.favouriteId);
+                                        }
+                                    } else {
+                                        await addFavourite(item.id);
+                                    }
+                            
+                                } catch (e) {
+                                    console.log('Favourite error:', e);
+                                }
+                            }}
+                        />
                     )}
                 />
             );
@@ -99,11 +121,11 @@ export default function HomeScreen() {
                 />
 
                 <Text style={styles.title}>
-                    No Cats Yet
+                    {STRINGS.homeScreen.noCatsAdded}
                 </Text>
 
                 <Text style={styles.subtitle}>
-                    Upload your first furry friend
+                    {STRINGS.homeScreen.uploadMsg}
                 </Text>
 
                 <TouchableOpacity
@@ -117,7 +139,7 @@ export default function HomeScreen() {
                     />
 
                     <Text style={styles.uploadButtonText}>
-                        Upload a Cat
+                        {STRINGS.homeScreen.uploadCat}
                     </Text>
                 </TouchableOpacity>
 
@@ -140,7 +162,7 @@ export default function HomeScreen() {
                     />
 
                     <Text style={styles.navText}>
-                        Home
+                        {STRINGS.homeScreen.home}
                     </Text>
                 </TouchableOpacity>
 
@@ -157,11 +179,11 @@ export default function HomeScreen() {
                     </View>
 
                     <Text style={styles.activeNavText}>
-                        Upload
+                        {STRINGS.homeScreen.upload}
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.navItem}>
+                <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('FavouritesScreen')}>
                     <FontAwesomeIcon
                         icon={faHeart}
                         size={22}
@@ -169,7 +191,7 @@ export default function HomeScreen() {
                     />
 
                     <Text style={styles.navText}>
-                        Favourites
+                        {STRINGS.homeScreen.favourites}
                     </Text>
                 </TouchableOpacity>
 
@@ -267,19 +289,6 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: 'red',
-    },
-    gridItem: {
-        width: ITEM_SIZE,
-        height: ITEM_SIZE,
-        margin: 6,
-        borderRadius: 12,
-        overflow: 'hidden',
-        backgroundColor: '#eee',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
     },
 
 });

@@ -1,4 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+  Cat,
+  Favourite,
+  Vote,
+  UploadResponse,
+  AddFavouriteResponse,
+  AddVoteRequest,
+  AddVoteResponse,
+} from '../types/catTypes';
 
 export const catApi = createApi({
   reducerPath: 'catApi',
@@ -16,17 +25,16 @@ export const catApi = createApi({
     },
   }),
 
-  tagTypes: ['Cats'],
+  tagTypes: ['Cats', 'Favourites', 'Votes'],
 
   endpoints: (builder) => ({
 
-    getCats: builder.query({
+    getCats: builder.query<Cat[], void>({
       query: () => 'images/?limit=20&order=DESC',
       providesTags: ['Cats'],
     }),
 
-    uploadCat: builder.mutation({
-
+    uploadCat: builder.mutation<UploadResponse, FormData>({
       query: (formData) => ({
         url: 'images/upload',
         method: 'POST',
@@ -36,7 +44,39 @@ export const catApi = createApi({
       invalidatesTags: ['Cats'],
     }),
 
+    getFavourites: builder.query<Favourite[], void>({
+      query: () => 'favourites',
+      providesTags: ['Favourites'],
+    }),
+
+    addFavourite: builder.mutation<AddFavouriteResponse,string >({
+      query: (image_id) => ({
+        url: 'favourites',
+        method: 'POST',
+        body: {
+          image_id,
+        },
+      }),
+
+      invalidatesTags: ['Favourites'],
+    }),
+
+    removeFavourite: builder.mutation<void,number>({
+      query: (favourite_id) => ({
+        url: `favourites/${favourite_id}`,
+        method: 'DELETE',
+      }),
+
+      invalidatesTags: ['Favourites'],
+    }),
+
   }),
 });
 
-export const { useGetCatsQuery, useUploadCatMutation,} = catApi;
+export const {
+  useGetCatsQuery,
+  useUploadCatMutation,
+  useGetFavouritesQuery,
+  useAddFavouriteMutation,
+  useRemoveFavouriteMutation,
+} = catApi;

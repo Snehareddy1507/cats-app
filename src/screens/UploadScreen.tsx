@@ -12,11 +12,10 @@ import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPaw, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useUploadCatMutation } from '../services/catApi';
-import { RootStackParamList } from '../../navigation/AppNavigator';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation/AppNavigator';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-type RouteProps = RouteProp<RootStackParamList, 'UploadScreen'>;
+import { STRINGS } from '../constants/strings';
 
 type NavigationProps = NativeStackNavigationProp<
     RootStackParamList,
@@ -43,7 +42,7 @@ export default function UploadScreen() {
         const asset = result.assets?.[0];
 
         if (!asset?.uri) {
-            Alert.alert('Error', 'Please select an image');
+            Alert.alert(STRINGS.uploadScreen.errorTitle, STRINGS.uploadScreen.selectImg);
             return;
         }
         setSelectedImage(asset);
@@ -52,7 +51,7 @@ export default function UploadScreen() {
     const handleUpload = async () => {
 
         if (!selectedImage) {
-            Alert.alert('Validation', 'Please choose an image first');
+            Alert.alert(STRINGS.uploadScreen.validationTitle, STRINGS.uploadScreen.chooseImg);
             return;
         }
 
@@ -68,11 +67,11 @@ export default function UploadScreen() {
 
         try {
             await uploadCat(formData).unwrap();
-            Alert.alert('Success', 'Cat uploaded successfully');
+            Alert.alert(STRINGS.uploadScreen.successTitle, STRINGS.uploadScreen.successMsg);
             navigation.goBack();
 
         } catch (error: unknown) {
-            Alert.alert('Upload Failed', 'Something went wrong');
+            Alert.alert(STRINGS.uploadScreen.uploadfailTitle, STRINGS.uploadScreen.FailMsg);
         }
     };
 
@@ -87,7 +86,6 @@ export default function UploadScreen() {
                     onPress={choosePhoto}
                     activeOpacity={0.8}
                 >
-
                     {selectedImage ? (
                         <Image
                             source={{ uri: selectedImage.uri }}
@@ -102,7 +100,7 @@ export default function UploadScreen() {
                                 style={styles.icon}
                             />
                             <Text style={styles.text}>
-                                Tap to Choose a Photo
+                              {STRINGS.uploadScreen.tapMsg}
                             </Text>
                         </>
                     )
@@ -127,7 +125,7 @@ export default function UploadScreen() {
                             color="#FFF"
                         />
                         <Text style={styles.uploadButtonText}>
-                            Upload a Cat
+                         {STRINGS.uploadScreen.uploadCat}
                         </Text>
                     </>
                 )

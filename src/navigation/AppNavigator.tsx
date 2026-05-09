@@ -1,17 +1,19 @@
 // App.tsx
 
 import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../src/screens/HomeScreen';
-import UploadScreen from '../src/screens/UploadScreen';
+import HomeScreen from '../screens/HomeScreen';
+import UploadScreen from '../screens/UploadScreen';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPaw } from '@fortawesome/free-solid-svg-icons';
+import FavouritesScreen from '../screens/FavouritesScreen';
 
 export type RootStackParamList = {
     HomeScreen: undefined;
     UploadScreen: undefined;
+    FavouritesScreen: undefined;
 
 };
 
@@ -27,7 +29,7 @@ export default function AppNavigator() {
                     options={{
                         headerTitle: () => (
                             <View style={styles.container}>
-                                <FontAwesomeIcon icon={faPaw} size={26} />
+                                <FontAwesomeIcon icon={faPaw} size={26} color={'white'} />
                                 <Text style={styles.text}>
                                     Cats Gallery
                                 </Text>
@@ -55,6 +57,22 @@ export default function AppNavigator() {
                         headerTintColor: '#fff',
                     }}
                 />
+                <Stack.Screen
+                    name="FavouritesScreen"
+                    component={FavouritesScreen}
+                    options={{
+                        headerBackTitle: 'Back',
+                        title: 'Favourite Cats', headerTitleAlign: 'center', headerTitleStyle: {
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            fontFamily: 'Roboto',
+                            color: 'white'
+                        }, headerStyle: {
+                            backgroundColor: '#00897B',
+                        },
+                        headerTintColor: '#fff',
+                    }}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
@@ -69,7 +87,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: 'Roboto',
         marginLeft: 8,
-
-
+        color: 'white'
     },
 });
