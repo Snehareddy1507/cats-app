@@ -10,37 +10,37 @@ export default function FavouritesScreen() {
     if (isLoading) {
         return (
             <View style={styles.center}>
-                <ActivityIndicator size="large" color="#00897B" />
+                <ActivityIndicator testID='loading' size="large" color="#00897B" />
             </View>
         );
     }
 
     return (
-    <View style={styles.container}>
-        <FlatList
-            data={favourites}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
-            renderItem={({ item }) => (
-                <View style={styles.itemContainer}>
-                    <Image
-                        source={{
-                            uri: `https://cdn2.thecatapi.com/images/${item.image_id}.jpg`,
-                        }}
-                        style={styles.image}
-                    />
-                </View>
-            )}
-            contentContainerStyle={{ flex: 1 }}
-            ListEmptyComponent={
-                <View style={styles.noData}>
-                    <Text style={styles.noDataText}>
-                       {STRINGS.favourites.noFavMsg}
-                    </Text>
-                </View>}
-        />
-    </View>
+        <View style={styles.container}>
+            <FlatList
+                data={favourites ?? []}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={2}
+                renderItem={({ item }) => (
+                    <View style={styles.itemContainer}>
+                        <Image
+                            source={{
+                                uri: `https://cdn2.thecatapi.com/images/${item.image_id}.jpg`,
+                            }}
+                            style={styles.image}
+                        />
+                    </View>
+                )}
+                contentContainerStyle={{ flex: 1 }}
+                ListEmptyComponent={
+                    <View style={styles.noData}>
+                        <Text style={styles.noDataText}>
+                            {STRINGS.favourites.noFavMsg}
+                        </Text>
+                    </View>}
+            />
+        </View>
     );
 }
 const styles = StyleSheet.create({
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     noData: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',  
+        alignItems: 'center',
     },
     noDataText: {
         fontSize: 16,

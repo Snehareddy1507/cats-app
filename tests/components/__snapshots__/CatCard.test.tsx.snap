@@ -1,0 +1,261 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CatCard renders favourite state correctly 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FFF",
+      "borderRadius": 12,
+      "elevation": 3,
+      "margin": 6,
+      "overflow": "hidden",
+      "width": 345,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "height": 345,
+        "position": "relative",
+        "width": "100%",
+      }
+    }
+  >
+    <Image
+      accessibilityLabel="Cat image"
+      source={
+        {
+          "uri": "https://cdn2.thecatapi.com/images/test.jpg",
+        }
+      }
+      style={
+        {
+          "height": "100%",
+          "resizeMode": "cover",
+          "width": "100%",
+        }
+      }
+      testID="cat-image"
+    />
+    <View
+      accessibilityLabel="Unfavourite cat"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#FFF",
+          "borderRadius": 20,
+          "left": 8,
+          "opacity": 1,
+          "padding": 6,
+          "position": "absolute",
+          "top": 8,
+        }
+      }
+    >
+      <Icon
+        color="#e63946"
+        icon={
+          {
+            "icon": [
+              512,
+              512,
+              [
+                128153,
+                128154,
+                128155,
+                128156,
+                128420,
+                129293,
+                129294,
+                129505,
+                9829,
+                10084,
+                61578,
+              ],
+              "f004",
+              "M241 87.1l15 20.7 15-20.7C296 52.5 336.2 32 378.9 32 452.4 32 512 91.6 512 165.1l0 2.6c0 112.2-139.9 242.5-212.9 298.2-12.4 9.4-27.6 14.1-43.1 14.1s-30.8-4.6-43.1-14.1C139.9 410.2 0 279.9 0 167.7l0-2.6C0 91.6 59.6 32 133.1 32 175.8 32 216 52.5 241 87.1z",
+            ],
+            "iconName": "heart",
+            "prefix": "fas",
+          }
+        }
+        size={18}
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFF",
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "paddingHorizontal": 12,
+        "paddingVertical": 12,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Vote cat up"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#00897B",
+          "borderRadius": 20,
+          "opacity": 1,
+          "padding": 10,
+        }
+      }
+      testID="vote-up-1"
+    >
+      <Icon
+        color="#FFF"
+        icon={
+          {
+            "icon": [
+              512,
+              512,
+              [
+                128077,
+                61575,
+              ],
+              "f164",
+              "M80 160c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-48 0c-17.7 0-32-14.3-32-32L0 192c0-17.7 14.3-32 32-32l48 0zM270.6 16C297.9 16 320 38.1 320 65.4l0 4.2c0 6.8-1.3 13.6-3.8 19.9L288 160 448 160c26.5 0 48 21.5 48 48 0 19.7-11.9 36.6-28.9 44 17 7.4 28.9 24.3 28.9 44 0 23.4-16.8 42.9-39 47.1 4.4 7.3 7 15.8 7 24.9 0 22.2-15 40.8-35.4 46.3 2.2 5.5 3.4 11.5 3.4 17.7 0 26.5-21.5 48-48 48l-87.9 0c-36.3 0-71.6-12.4-99.9-35.1L184 435.2c-15.2-12.1-24-30.5-24-50l0-186.6c0-14.9 3.5-29.6 10.1-42.9L226.3 43.3C234.7 26.6 251.8 16 270.6 16z",
+            ],
+            "iconName": "thumbs-up",
+            "prefix": "fas",
+          }
+        }
+        size={12}
+      />
+    </View>
+    <Text
+      style={
+        {
+          "color": "#222",
+          "fontSize": 16,
+          "fontWeight": "700",
+        }
+      }
+    >
+      5
+    </Text>
+    <View
+      accessibilityLabel="Vote cat down"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#00897B",
+          "borderRadius": 20,
+          "opacity": 1,
+          "padding": 10,
+        }
+      }
+      testID="vote-down-1"
+    >
+      <Icon
+        color="#FFF"
+        icon={
+          {
+            "icon": [
+              512,
+              512,
+              [
+                128078,
+                61576,
+              ],
+              "f165",
+              "M384 32c26.5 0 48 21.5 48 48 0 6.3-1.3 12.2-3.4 17.7 20.4 5.5 35.4 24.1 35.4 46.3 0 9.1-2.6 17.6-7 24.9 22.2 4.2 39 23.7 39 47.1 0 19.7-11.9 36.6-28.9 44 17 7.4 28.9 24.3 28.9 44 0 26.5-21.5 48-48 48l-160 0 28.2 70.4c2.5 6.3 3.8 13.1 3.8 19.9l0 4.2c0 27.3-22.1 49.4-49.4 49.4-18.7 0-35.8-10.6-44.2-27.3L170.1 356.3c-6.7-13.3-10.1-28-10.1-42.9l0-186.6c0-19.4 8.9-37.8 24-50l12.2-9.7C224.6 44.4 259.8 32 296.1 32L384 32zM80 96c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-48 0c-17.7 0-32-14.3-32-32L0 128c0-17.7 14.3-32 32-32l48 0z",
+            ],
+            "iconName": "thumbs-down",
+            "prefix": "fas",
+          }
+        }
+        size={12}
+      />
+    </View>
+  </View>
+</View>
+`;

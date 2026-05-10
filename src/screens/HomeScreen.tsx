@@ -6,10 +6,9 @@ import {
     TouchableOpacity,
     FlatList,
     ActivityIndicator,
-} from 'react-native'; 
+} from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-    faCat,
     faHouse,
     faUpload,
     faHeart,
@@ -21,6 +20,7 @@ import { useGetCatsQuery, useGetFavouritesQuery, useAddFavouriteMutation, useRem
 import { STRINGS } from '../constants/strings';
 import CatCard from '../components/CatCard';
 import { Cat, Favourite } from '../types/catTypes';
+import EmptyState from '../components/EmptyState';
 
 type NavigationProps = NativeStackNavigationProp<
     RootStackParamList,
@@ -28,7 +28,6 @@ type NavigationProps = NativeStackNavigationProp<
 >;
 
 export default function HomeScreen() {
-
     const navigation = useNavigation<NavigationProps>();
     const [scores, setScores] = React.useState<Record<string, number>>({});
     const {
@@ -123,7 +122,7 @@ export default function HomeScreen() {
         if (isLoading) {
             return (
                 <View style={styles.center}>
-                    <ActivityIndicator size="large" color="#00897B" />
+                    <ActivityIndicator  testID='loading-indicator' size="large" color="#00897B" />
                 </View>
             );
         }
@@ -161,38 +160,12 @@ export default function HomeScreen() {
         }
 
         return (
-            <View style={styles.bottomContainer}>
-
-                <FontAwesomeIcon
-                    icon={faCat}
-                    size={150}
-                    color="#00897B"
-                />
-
-                <Text style={styles.title}>
-                    {STRINGS.homeScreen.noCatsAdded}
-                </Text>
-
-                <Text style={styles.subtitle}>
-                    {STRINGS.homeScreen.uploadMsg}
-                </Text>
-
-                <TouchableOpacity
-                    style={styles.uploadButton}
-                    onPress={() => navigation.navigate('UploadScreen')}
-                >
-                    <FontAwesomeIcon
-                        icon={faUpload}
-                        size={26}
-                        color="#FFF"
-                    />
-
-                    <Text style={styles.uploadButtonText}>
-                        {STRINGS.homeScreen.uploadCat}
-                    </Text>
-                </TouchableOpacity>
-
-            </View>
+            <EmptyState
+                title={STRINGS.homeScreen.noCatsAdded}
+                subtitle={STRINGS.homeScreen.uploadMsg}
+                buttonText={STRINGS.homeScreen.uploadCat}
+                onPress={() => navigation.navigate('UploadScreen')}
+            />
         );
     };
 
@@ -258,11 +231,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#E8F5E9',
         paddingHorizontal: 20,
     },
-    bottomContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     contentContainer: {
         paddingBottom: 120,
         paddingTop: 12,
@@ -273,39 +241,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
-    title: {
-        fontSize: 22,
-        fontWeight: '800',
-        color: '#111827',
-        marginTop: 20,
-        textAlign: 'center',
-    },
-    subtitle: {
-        fontSize: 18,
-        color: '#777',
-        marginTop: 10,
-        textAlign: 'center',
-    },
     colWrapper: {
         justifyContent: 'space-between',
         marginBottom: 12,
-    },
-    uploadButtonText: {
-        color: '#FFF',
-        fontSize: 20,
-        fontWeight: '700',
-        marginLeft: 10,
-    },
-    uploadButton: {
-        marginTop: 40,
-        backgroundColor: '#00897B',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 16,
-        paddingHorizontal: 28,
-        borderRadius: 40,
-        elevation: 4,
     },
     bottomNav: {
         position: 'absolute',
@@ -330,12 +268,6 @@ const styles = StyleSheet.create({
         color: '#777',
         fontSize: 12,
         fontWeight: '500',
-    },
-    activeNavText: {
-        marginTop: 6,
-        color: '#00897B',
-        fontSize: 12,
-        fontWeight: '700',
     },
     activeIconContainer: {
         width: 42,

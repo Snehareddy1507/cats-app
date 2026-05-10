@@ -112,7 +112,7 @@ export default function UploadScreen() {
                 disabled={isLoading}
             >
                 {isLoading ? (
-                    <ActivityIndicator color="#FFF" />
+                    <ActivityIndicator testID="loading-indicator" color="#FFF" />
                 ) : (
                     <>
                         <FontAwesomeIcon

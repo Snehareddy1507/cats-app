@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    View,
     Text,
     TouchableOpacity,
     Image,
@@ -27,11 +26,15 @@ export default function ImagePicker({
                 style={styles.innerContainer}
                 onPress={onPress}
                 activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel="Image picker button"
             >
                 {selectedImage ? (
                     <Image
                         source={{ uri: selectedImage.uri }}
                         style={styles.previewImage}
+                        accessibilityLabel="Selected cat image"
+                        testID="selected-image"
                     />
                 ) : (
                     <>

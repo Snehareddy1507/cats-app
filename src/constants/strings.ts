@@ -16,7 +16,7 @@ export const STRINGS = {
         favourites: 'Favourites',
     },
     uploadScreen: {
-        tapMsg:' Tap to Choose a Photo',
+        tapMsg:'Tap to Choose a Photo',
         uploadCat:'Upload a Cat',
         selectImg:'Please select an image',
         chooseImg:'Please choose an image first',

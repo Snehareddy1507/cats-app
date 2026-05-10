@@ -36,24 +36,31 @@ export default function CatCard({
   onVoteUp,
   onVoteDown,
 }: Props) {
- 
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.gridItem}>
         <Image
           source={{ uri: item.url }}
           style={styles.image}
+          testID='cat-image'
+          accessibilityLabel="Cat image"
         />
 
         <TouchableOpacity
           onPress={onToggleFavourite}
           style={styles.heartButton}
+          accessibilityRole="button"
+          accessibilityLabel={
+            item.isFavourite
+              ? 'Unfavourite cat'
+              : 'Favourite cat'}
         >
           <FontAwesomeIcon icon={
-              item.isFavourite
-                ? solidHeart
-                : regularHeart
-            }
+            item.isFavourite
+              ? solidHeart
+              : regularHeart
+          }
             size={18}
             color={
               item.isFavourite
@@ -71,6 +78,9 @@ export default function CatCard({
         <TouchableOpacity
           style={styles.voteButton}
           onPress={onVoteUp}
+          testID={`vote-up-${item.id}`}
+          accessibilityRole="button"
+          accessibilityLabel="Vote cat up"
         >
           <FontAwesomeIcon
             icon={faThumbsUp}
@@ -86,6 +96,9 @@ export default function CatCard({
         <TouchableOpacity
           style={styles.voteButton}
           onPress={onVoteDown}
+          testID={`vote-down-${item.id}`}
+          accessibilityRole="button"
+          accessibilityLabel="Vote cat down"
         >
           <FontAwesomeIcon
             icon={faThumbsDown}
@@ -140,7 +153,7 @@ const styles = StyleSheet.create({
   },
   heartButton: {
     position: 'absolute',
-    top: 8, 
+    top: 8,
     left: 8,
     backgroundColor: '#FFF',
     borderRadius: 20,
