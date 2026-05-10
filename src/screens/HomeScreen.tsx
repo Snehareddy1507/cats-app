@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     FlatList,
     ActivityIndicator,
-} from 'react-native';
+} from 'react-native'; 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
     faCat,
@@ -40,7 +40,9 @@ export default function HomeScreen() {
     const { data: favourites } = useGetFavouritesQuery();
     const [addFavourite] = useAddFavouriteMutation();
     const [removeFavourite] = useRemoveFavouriteMutation();
-    const { data: votes } = useGetVotesQuery();
+    const { data: votes } = useGetVotesQuery(undefined, {
+        refetchOnMountOrArgChange: true,
+    });
 
     const [addVote] = useAddVoteMutation();
 
@@ -69,7 +71,7 @@ export default function HomeScreen() {
             ...prev,
             [imageId]: (prev[imageId] ?? getScore(imageId)) + 1,
         }));
-    
+
         try {
             await addVote({
                 image_id: imageId,
@@ -88,11 +90,11 @@ export default function HomeScreen() {
             ...prev,
             [imageId]: (prev[imageId] ?? getScore(imageId)) - 1,
         }));
-    
+
         try {
             await addVote({
                 image_id: imageId,
-                value: 0,
+                value: -1,
             });
         } catch {
             setScores(prev => ({
@@ -202,12 +204,13 @@ export default function HomeScreen() {
             <View style={styles.bottomNav}>
 
                 <TouchableOpacity style={styles.navItem}>
-                    <FontAwesomeIcon
-                        icon={faHouse}
-                        size={22}
-                        color="#111"
-                    />
-
+                    <View style={styles.activeIconContainer}>
+                        <FontAwesomeIcon
+                            icon={faHouse}
+                            size={20}
+                            color="#FFF"
+                        />
+                    </View>
                     <Text style={styles.navText}>
                         {STRINGS.homeScreen.home}
                     </Text>
@@ -217,15 +220,15 @@ export default function HomeScreen() {
                     style={styles.navItem}
                     onPress={() => navigation.navigate('UploadScreen')}
                 >
-                    <View style={styles.activeIconContainer}>
+                    <View>
                         <FontAwesomeIcon
                             icon={faUpload}
-                            size={20}
-                            color="#FFF"
+                            size={22}
+                            color="#777"
                         />
                     </View>
 
-                    <Text style={styles.activeNavText}>
+                    <Text style={styles.navText}>
                         {STRINGS.homeScreen.upload}
                     </Text>
                 </TouchableOpacity>
@@ -234,7 +237,7 @@ export default function HomeScreen() {
                     <FontAwesomeIcon
                         icon={faHeart}
                         size={22}
-                        color="#FF0000"
+                        color="#777"
                     />
 
                     <Text style={styles.navText}>

@@ -8,6 +8,7 @@ import {
   AddVoteRequest,
   AddVoteResponse,
 } from '../types/catTypes';
+import { CATS_API_KEY } from '@env';
 
 export const catApi = createApi({
   reducerPath: 'catApi',
@@ -16,11 +17,9 @@ export const catApi = createApi({
     baseUrl: 'https://api.thecatapi.com/v1/',
     prepareHeaders: (headers) => {
 
-      headers.set(
-        'x-api-key',
-        'live_6Khf6Qbye4L6HOG3aAJOM5bkA9uaNnTwyD54wXB7BbY34EiUihEwO2JU5P4tuRlb'
-      );
-
+      if (CATS_API_KEY) {
+        headers.set('x-api-key', CATS_API_KEY);
+      }
       return headers;
     },
   }),
