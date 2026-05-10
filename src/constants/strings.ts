@@ -1,5 +1,8 @@
 export const STRINGS = {
 
+    appNavigator: {
+        catGallery: 'Cats Gallery',
+    },
     favourites: {
         noFavMsg: 'No Favourites Added Yet'
     },

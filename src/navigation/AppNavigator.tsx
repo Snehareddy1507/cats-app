@@ -9,12 +9,12 @@ import UploadScreen from '../screens/UploadScreen';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPaw } from '@fortawesome/free-solid-svg-icons';
 import FavouritesScreen from '../screens/FavouritesScreen';
+import { STRINGS } from '../constants/strings';
 
 export type RootStackParamList = {
     HomeScreen: undefined;
     UploadScreen: undefined;
     FavouritesScreen: undefined;
-
 };
 
 const Stack = createNativeStackNavigator();
@@ -31,7 +31,7 @@ export default function AppNavigator() {
                             <View style={styles.container}>
                                 <FontAwesomeIcon icon={faPaw} size={26} color={'white'} />
                                 <Text style={styles.text}>
-                                    Cats Gallery
+                                    {STRINGS.appNavigator.catGallery}
                                 </Text>
                             </View>
                         ),
@@ -74,6 +74,7 @@ export default function AppNavigator() {
                     }}
                 />
             </Stack.Navigator>
+            
         </NavigationContainer>
     );
 }

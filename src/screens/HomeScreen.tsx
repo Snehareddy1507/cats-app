@@ -17,7 +17,7 @@ import {
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useGetCatsQuery, useGetFavouritesQuery, useAddFavouriteMutation, useRemoveFavouriteMutation } from '../services/catApi';
+import { useGetCatsQuery, useGetFavouritesQuery, useAddFavouriteMutation, useRemoveFavouriteMutation, useGetVotesQuery, useAddVoteMutation, } from '../services/catApi';
 import { STRINGS } from '../constants/strings';
 import CatCard from '../components/CatCard';
 import { Cat, Favourite } from '../types/catTypes';
@@ -30,16 +30,26 @@ type NavigationProps = NativeStackNavigationProp<
 export default function HomeScreen() {
 
     const navigation = useNavigation<NavigationProps>();
-
+    const [scores, setScores] = React.useState<Record<string, number>>({});
     const {
         data,
         isLoading,
         error,
-    } = useGetCatsQuery(undefined);
+    } = useGetCatsQuery();
 
-    const { data: favourites } = useGetFavouritesQuery(undefined);
+    const { data: favourites } = useGetFavouritesQuery();
     const [addFavourite] = useAddFavouriteMutation();
     const [removeFavourite] = useRemoveFavouriteMutation();
+    const { data: votes } = useGetVotesQuery();
+
+    const [addVote] = useAddVoteMutation();
+
+    const getScore = React.useCallback(
+        (imageId: string): number =>
+            votes?.filter(v => v.image_id === imageId)
+                .reduce((sum, v) => sum + (v.value > 0 ? 1 : -1), 0) ?? 0,
+        [votes]
+    );
 
     const mergedData = React.useMemo(() => {
         if (!data) return [];
@@ -53,6 +63,58 @@ export default function HomeScreen() {
             };
         });
     }, [data, favourites]);
+
+    const handleVoteUp = async (imageId: string) => {
+        setScores(prev => ({
+            ...prev,
+            [imageId]: (prev[imageId] ?? getScore(imageId)) + 1,
+        }));
+    
+        try {
+            await addVote({
+                image_id: imageId,
+                value: 1,
+            });
+        } catch {
+            setScores(prev => ({
+                ...prev,
+                [imageId]: (prev[imageId] ?? getScore(imageId)) - 1,
+            }));
+        }
+    };
+
+    const handleVoteDown = async (imageId: string) => {
+        setScores(prev => ({
+            ...prev,
+            [imageId]: (prev[imageId] ?? getScore(imageId)) - 1,
+        }));
+    
+        try {
+            await addVote({
+                image_id: imageId,
+                value: 0,
+            });
+        } catch {
+            setScores(prev => ({
+                ...prev,
+                [imageId]: (prev[imageId] ?? getScore(imageId)) + 1,
+            }));
+        }
+    };
+
+    const handleToggleFavourite = async (item: Cat & { isFavourite: boolean; favouriteId: number | null }) => {
+        try {
+            if (item.isFavourite) {
+                if (item.favouriteId) {
+                    await removeFavourite(item.favouriteId);
+                }
+            } else {
+                await addFavourite(item.id);
+            }
+        } catch (e) {
+            console.log('Favourite error:', e);
+        }
+    };
 
     const renderContent = () => {
 
@@ -78,33 +140,18 @@ export default function HomeScreen() {
             return (
                 <FlatList
                     data={mergedData ?? []}
+                    showsVerticalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
                     numColumns={2}
-                    contentContainerStyle={{
-                        paddingBottom: 120,
-                        paddingTop: 12,
-                    }}
-                    columnWrapperStyle={{
-                        justifyContent: 'space-between',
-                        marginBottom: 12,
-                    }}
+                    contentContainerStyle={styles.contentContainer}
+                    columnWrapperStyle={styles.colWrapper}
                     renderItem={({ item }) => (
                         <CatCard
                             item={item}
-                            onToggleFavourite={async () => {
-                                try {
-                                    if (item.isFavourite) {
-                                        if (item.favouriteId) {
-                                            await removeFavourite(item.favouriteId);
-                                        }
-                                    } else {
-                                        await addFavourite(item.id);
-                                    }
-                            
-                                } catch (e) {
-                                    console.log('Favourite error:', e);
-                                }
-                            }}
+                            score={scores[item.id] ?? getScore(item.id)}
+                            onVoteUp={() => handleVoteUp(item.id)}
+                            onVoteDown={() => handleVoteDown(item.id)}
+                            onToggleFavourite={() => handleToggleFavourite(item)}
                         />
                     )}
                 />
@@ -158,7 +205,7 @@ export default function HomeScreen() {
                     <FontAwesomeIcon
                         icon={faHouse}
                         size={22}
-                        color="#777"
+                        color="#111"
                     />
 
                     <Text style={styles.navText}>
@@ -187,7 +234,7 @@ export default function HomeScreen() {
                     <FontAwesomeIcon
                         icon={faHeart}
                         size={22}
-                        color="#777"
+                        color="#FF0000"
                     />
 
                     <Text style={styles.navText}>
@@ -213,6 +260,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    contentContainer: {
+        paddingBottom: 120,
+        paddingTop: 12,
+    },
     center: {
         flex: 1,
         justifyContent: 'center',
@@ -231,6 +282,10 @@ const styles = StyleSheet.create({
         color: '#777',
         marginTop: 10,
         textAlign: 'center',
+    },
+    colWrapper: {
+        justifyContent: 'space-between',
+        marginBottom: 12,
     },
     uploadButtonText: {
         color: '#FFF',
@@ -291,4 +346,4 @@ const styles = StyleSheet.create({
         color: 'red',
     },
 
-});
+}); 

@@ -4,18 +4,18 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    Image,
-    Alert,
     ActivityIndicator,
 } from 'react-native';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faPaw, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useUploadCatMutation } from '../services/catApi';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { STRINGS } from '../constants/strings';
+import Toast from 'react-native-toast-message';
+import ImagePicker from '../components/ImagePicker';
 
 type NavigationProps = NativeStackNavigationProp<
     RootStackParamList,
@@ -42,7 +42,11 @@ export default function UploadScreen() {
         const asset = result.assets?.[0];
 
         if (!asset?.uri) {
-            Alert.alert(STRINGS.uploadScreen.errorTitle, STRINGS.uploadScreen.selectImg);
+            Toast.show({
+                type: 'error',
+                text1: STRINGS.uploadScreen.errorTitle,
+                text2: STRINGS.uploadScreen.selectImg,
+            });
             return;
         }
         setSelectedImage(asset);
@@ -51,7 +55,11 @@ export default function UploadScreen() {
     const handleUpload = async () => {
 
         if (!selectedImage) {
-            Alert.alert(STRINGS.uploadScreen.validationTitle, STRINGS.uploadScreen.chooseImg);
+            Toast.show({
+                type: 'error',
+                text1: STRINGS.uploadScreen.validationTitle,
+                text2: STRINGS.uploadScreen.chooseImg,
+            });
             return;
         }
 
@@ -67,11 +75,19 @@ export default function UploadScreen() {
 
         try {
             await uploadCat(formData).unwrap();
-            Alert.alert(STRINGS.uploadScreen.successTitle, STRINGS.uploadScreen.successMsg);
+            Toast.show({
+                type: 'success',
+                text1: STRINGS.uploadScreen.successTitle,
+                text2: STRINGS.uploadScreen.successMsg,
+            });
             navigation.goBack();
 
         } catch (error: unknown) {
-            Alert.alert(STRINGS.uploadScreen.uploadfailTitle, STRINGS.uploadScreen.FailMsg);
+            Toast.show({
+                type: 'error',
+                text1: STRINGS.uploadScreen.uploadfailTitle,
+                text2: STRINGS.uploadScreen.FailMsg,
+            });
         }
     };
 
@@ -81,31 +97,11 @@ export default function UploadScreen() {
             {/* Upload Area */}
             <View style={styles.topSection}>
 
-                <TouchableOpacity
-                    style={styles.innerContainer}
+                <ImagePicker
+                    selectedImage={selectedImage}
                     onPress={choosePhoto}
-                    activeOpacity={0.8}
-                >
-                    {selectedImage ? (
-                        <Image
-                            source={{ uri: selectedImage.uri }}
-                            style={styles.previewImage}
-                        />
-
-                    ) : (
-                        <>
-                            <FontAwesomeIcon
-                                icon={faPaw}
-                                size={120}
-                                style={styles.icon}
-                            />
-                            <Text style={styles.text}>
-                              {STRINGS.uploadScreen.tapMsg}
-                            </Text>
-                        </>
-                    )
-                    }
-                </TouchableOpacity>
+                    text={STRINGS.uploadScreen.tapMsg}
+                />
 
             </View>
 
@@ -125,7 +121,7 @@ export default function UploadScreen() {
                             color="#FFF"
                         />
                         <Text style={styles.uploadButtonText}>
-                         {STRINGS.uploadScreen.uploadCat}
+                            {STRINGS.uploadScreen.uploadCat}
                         </Text>
                     </>
                 )
@@ -146,32 +142,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    innerContainer: {
-        width: '85%',
-        height: '60%',
-        borderWidth: 2,
-        borderColor: '#00897B',
-        borderStyle: 'dashed',
-        borderRadius: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        backgroundColor: '#F5FFFD',
-    },
-    icon: {
-        color: '#00897B',
-    },
-    text: {
-        marginTop: 20,
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#111827',
-    },
-    previewImage: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
     },
     uploadButton: {
         position: 'absolute',

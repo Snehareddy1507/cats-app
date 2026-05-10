@@ -70,6 +70,23 @@ export const catApi = createApi({
       invalidatesTags: ['Favourites'],
     }),
 
+    getVotes: builder.query<Vote[], void>({
+      query: () => 'votes',
+      providesTags: ['Votes'],
+    }),
+  
+    addVote: builder.mutation<AddVoteResponse, AddVoteRequest>({
+      query: ({ image_id, value }) => ({
+        url: 'votes',
+        method: 'POST',
+        body: {
+          image_id,
+          value,
+        },
+      }),
+     invalidatesTags: ['Votes']
+    }),
+
   }),
 });
 
@@ -79,4 +96,6 @@ export const {
   useGetFavouritesQuery,
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
+  useGetVotesQuery,
+  useAddVoteMutation,
 } = catApi;

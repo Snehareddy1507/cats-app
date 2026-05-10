@@ -5,7 +5,7 @@ import { STRINGS } from '../constants/strings';
 
 export default function FavouritesScreen() {
 
-    const { data: favourites, isLoading } = useGetFavouritesQuery(undefined);
+    const { data: favourites, isLoading } = useGetFavouritesQuery();
 
     if (isLoading) {
         return (
@@ -16,12 +16,14 @@ export default function FavouritesScreen() {
     }
 
     return (
+    <View style={styles.container}>
         <FlatList
             data={favourites}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             renderItem={({ item }) => (
-                <View style={styles.container}>
+                <View style={styles.itemContainer}>
                     <Image
                         source={{
                             uri: `https://cdn2.thecatapi.com/images/${item.image_id}.jpg`,
@@ -38,18 +40,23 @@ export default function FavouritesScreen() {
                     </Text>
                 </View>}
         />
+    </View>
     );
 }
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
-        margin: 6
+        margin: 6,
+        backgroundColor: '#E8F5E9',
+    },
+    itemContainer: {
+        flex: 1,
+        margin: 6,
     },
     image: {
         width: '100%',
-        height: 150,
-        borderRadius: 10
+        height: 200,
+        borderRadius: 10,
     },
     center: {
         flex: 1,
