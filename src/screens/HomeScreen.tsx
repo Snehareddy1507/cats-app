@@ -29,11 +29,13 @@ type NavigationProps = NativeStackNavigationProp<
 
 export default function HomeScreen() {
     const navigation = useNavigation<NavigationProps>();
+    const [refreshing, setRefreshing] = React.useState(false);
     const [scores, setScores] = React.useState<Record<string, number>>({});
     const {
         data,
         isLoading,
         error,
+        refetch
     } = useGetCatsQuery();
 
     const { data: favourites } = useGetFavouritesQuery();
@@ -64,6 +66,15 @@ export default function HomeScreen() {
             };
         });
     }, [data, favourites]);
+
+    const onRefresh = async () => {
+        try {
+            setRefreshing(true);
+            await refetch();
+        } finally {
+            setRefreshing(false);
+        }
+    };
 
     const handleVoteUp = async (imageId: string) => {
         setScores(prev => ({
@@ -155,6 +166,8 @@ export default function HomeScreen() {
                             onToggleFavourite={() => handleToggleFavourite(item)}
                         />
                     )}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                 />
             );
         }

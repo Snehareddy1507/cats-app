@@ -5,7 +5,8 @@ import { STRINGS } from '../constants/strings';
 
 export default function FavouritesScreen() {
 
-    const { data: favourites, isLoading } = useGetFavouritesQuery();
+    const { data: favourites, isLoading, refetch } = useGetFavouritesQuery();
+    const [refreshing, setRefreshing] = React.useState(false);
 
     if (isLoading) {
         return (
@@ -15,6 +16,15 @@ export default function FavouritesScreen() {
         );
     }
 
+  const onRefresh = async () => {
+        try {
+            setRefreshing(true);
+            await refetch();
+        } finally {
+            setRefreshing(false);
+        }
+    };
+    
     return (
         <View style={styles.container}>
             <FlatList
@@ -32,6 +42,8 @@ export default function FavouritesScreen() {
                         />
                     </View>
                 )}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
                 contentContainerStyle={{ flex: 1 }}
                 ListEmptyComponent={
                     <View style={styles.noData}>
